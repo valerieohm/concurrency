@@ -1,0 +1,73 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "echo workspaceFolder",
+            "type": "shell",
+            "command": "echo ${workspaceFolder}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "refresh compile_commands",
+            "type": "bazel",
+            "command": "run",
+            "targets": [
+                "@hedron_compile_commands//:refresh_all"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "Run bazel build",
+            "type" : "bazel",
+            "command": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "targets": ["${input:cctargets}"],
+            "problemMatcher" :"$gcc"
+            
+        },
+                {
+            "label": "Build test binary",
+            "type" : "bazel",
+            "command": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "targets": ["//tests:test_main"],
+            "problemMatcher" :"$gcc"
+            
+        },
+        {
+            "label": "Run tests",
+            "type" : "bazel",
+            "command": "test",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "targets": ["${input:cctargets}"],
+        }
+    ],
+    "inputs": [
+        {
+        "id": "cctargets",
+        "type": "command",
+        "command": "bazel.pickTarget",
+        "args": {
+            "query": "kind('cc_.*', //...:*)",
+            "placeHolder": "Build which target?",
+        },
+    },
+  ]
+}
