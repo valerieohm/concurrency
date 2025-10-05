@@ -6,6 +6,6 @@ cc_library(
     hdrs = glob(["include/*.hpp"]),
     includes = ["include"],
     visibility = ["//visibility:public"],
-    copts = ["-std=c++17", "-pthread", "-g", "-O0"],  # C++17, threading, debug info
+    copts = ["-std=c++23", "-pthread", "-g", "-O0"],  # C++17, threading, debug info
     linkopts = ["-pthread"],
 )

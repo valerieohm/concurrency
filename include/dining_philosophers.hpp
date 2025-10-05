@@ -15,7 +15,12 @@ class DiningPhilosophers {
 public:
     explicit DiningPhilosophers(int num_philosophers = 5);
     ~DiningPhilosophers();
-    
+    enum class State {
+        Think = 0,
+        WaitLeft,
+        WaitRight,
+        Eat
+    };
     /**
      * Start the dining session. Each philosopher should:
      * 1. Think for a random time
@@ -44,9 +49,17 @@ public:
 private:
     int num_philosophers_;
     std::atomic<bool> running_{false};
+    std::vector<std::mutex> forks_;
+    std::vector<std::thread> threads_;
+    std::mutex output_mutex_;
+    std::vector<std::atomic<int>> eat_counts_;
+    std::vector<std::atomic<State>> states_;
     
     // TODO: Implement proper fork management and deadlock prevention
     void philosopher_routine(int philosopher_id);
+        void output(int id, std::string const & msg);
+
+
 };
 
 } // namespace concurrency

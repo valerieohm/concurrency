@@ -13,6 +13,20 @@
 **std::lock_guard**
 : Releases mutex on loss of scope/destruction
 
+deadlock
+: mutual exclusion, resource holding, non-preemption, circular wait
+
+resource starvation
+:
+
+livelock
+:
+
+mutex
+: bound to the thread that locks it.
+
+semaphore
+: not bound to thread. primitive condition variable
 
 
 

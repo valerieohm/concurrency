@@ -48,7 +48,27 @@ TEST_F(ThreadSafeCacheTest, LRUEviction) {
     EXPECT_TRUE(cache.contains("key3"));
     EXPECT_TRUE(cache.contains("key4"));
 }
+TEST_F(ThreadSafeCacheTest, Valerie) {
+    // Pre-populate cache
+    for (int i = 0; i < 3; ++i) {
+        cache.put("key" + std::to_string(i), i * 10);
+    }
+    cache.put("first", 11);
+    cache.put("second", 22);
+    cache.put("third", 33);
 
+    //for (size_t j = 0; j < 10; j++)
+    cache.get("third");
+    cache.get("second");
+    cache.get("first");
+        cache.get("third");
+
+    
+    
+
+    // All reads should succeed since keys exist
+    EXPECT_EQ(true, true);
+}
 TEST_F(ThreadSafeCacheTest, ConcurrentReads) {
     // Pre-populate cache
     for (int i = 0; i < 3; ++i) {
@@ -79,6 +99,8 @@ TEST_F(ThreadSafeCacheTest, ConcurrentReads) {
     // All reads should succeed since keys exist
     EXPECT_EQ(successful_reads.load(), num_readers * reads_per_reader);
 }
+
+
 
 TEST_F(ThreadSafeCacheTest, ConcurrentReadWrites) {
     std::atomic<bool> stop{false};
