@@ -12,7 +12,7 @@ protected:
 TEST_F(DiningPhilosophersTest, BasicStartStop) {
     philosophers.start_dining();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    
+
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     auto deadlocked = philosophers.is_deadlocked();
     EXPECT_FALSE(deadlocked);
@@ -35,7 +35,7 @@ TEST_F(DiningPhilosophersTest, NoDeadlockDetected) {
     
     // Run for a reasonable time
     std::this_thread::sleep_for(std::chrono::seconds(4));
-    
+
     // Should not be deadlocked
     EXPECT_FALSE(philosophers.is_deadlocked());
     

@@ -1,10 +1,10 @@
 #ifndef THREAD_SAFE_QUEUE
 #define THREAD_SAFE_QUEUE
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
-#include <queue>
 #include <optional>
-#include <atomic>
+#include <queue>
 #include <stdexcept>
 
 namespace concurrency {
@@ -42,8 +42,7 @@ public:
      * Returns nullopt if queue is empty.
      * Should be thread-safe.
      */
-    std::optional<T> try_pop() 
-    {
+    std::optional<T> try_pop() {
         std::lock_guard<std::mutex> lock(mMutex);
         if (!mQueue.empty()) {
             T popped = std::move(mQueue.front());
@@ -58,15 +57,15 @@ public:
      * Blocks until an item is available.
      * Should be thread-safe and support proper cancellation.
      */
-    T wait_and_pop()
-    {
+    T wait_and_pop() {
         std::unique_lock<std::mutex> lock(mMutex);
-        mCondVar.wait(lock, [this]{ return !mQueue.empty() || mShutdown.load(); });
-        
+        mCondVar.wait(lock,
+                      [this] { return !mQueue.empty() || mShutdown.load(); });
+
         if (mShutdown.load() && mQueue.empty()) {
             throw std::runtime_error("Queue has been shut down");
         }
-        
+
         T result = std::move(mQueue.front());
         mQueue.pop();
         return result;

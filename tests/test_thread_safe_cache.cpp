@@ -57,14 +57,11 @@ TEST_F(ThreadSafeCacheTest, Valerie) {
     cache.put("second", 22);
     cache.put("third", 33);
 
-    //for (size_t j = 0; j < 10; j++)
+    // for (size_t j = 0; j < 10; j++)
     cache.get("third");
     cache.get("second");
     cache.get("first");
-        cache.get("third");
-
-    
-    
+    cache.get("third");
 
     // All reads should succeed since keys exist
     EXPECT_EQ(true, true);
@@ -99,8 +96,6 @@ TEST_F(ThreadSafeCacheTest, ConcurrentReads) {
     // All reads should succeed since keys exist
     EXPECT_EQ(successful_reads.load(), num_readers * reads_per_reader);
 }
-
-
 
 TEST_F(ThreadSafeCacheTest, ConcurrentReadWrites) {
     std::atomic<bool> stop{false};

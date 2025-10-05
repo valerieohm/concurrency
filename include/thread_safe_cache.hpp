@@ -4,8 +4,8 @@
 #include <functional>
 #include <iostream>
 #include <memory>
-#include <optional>
 #include <mutex>
+#include <optional>
 #include <unordered_map>
 
 namespace concurrency {
@@ -21,6 +21,7 @@ public:
 
     ThreadSafeCache(const ThreadSafeCache &) = delete;
     ThreadSafeCache &operator=(const ThreadSafeCache &) = delete;
+
 private:
     void pop_head() {
         if (!head_) {
@@ -37,6 +38,7 @@ private:
             }
         }
     }
+
 public:
     /**
      * Get value for key. Returns nullopt if not found.
@@ -81,8 +83,10 @@ public:
             cache_.insert(std::make_pair(key, node));
             assert(node->next_ == nullptr);
             node->next_ = head_;
-            if (head_) head_->prev_ = node;
-            else tail_ = node;
+            if (head_)
+                head_->prev_ = node;
+            else
+                tail_ = node;
             head_ = node;
         }
         if (cache_.size() > capacity_) {
@@ -94,7 +98,6 @@ public:
             tail_ = newtail;
         }
     }
-    
 
     /**
      * Remove key from cache if present.
@@ -166,8 +169,8 @@ private:
         Key key_;
         Value value_;
         std::shared_ptr<Node> prev_, next_;
-        Node(Key const & key, Value const & value) :
-        key_(key), value_(value), prev_(nullptr), next_(nullptr) {}
+        Node(Key const &key, Value const &value)
+            : key_(key), value_(value), prev_(nullptr), next_(nullptr) {}
     };
 
     std::shared_ptr<Node> head_, tail_; // Dummy nodes
@@ -186,7 +189,8 @@ private:
             next->prev_ = prev;
         node->prev_ = nullptr;
         node->next_ = head_;
-        if (head_) head_->prev_ = node;
+        if (head_)
+            head_->prev_ = node;
         head_ = node;
     }
 };

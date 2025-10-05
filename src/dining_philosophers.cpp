@@ -1,14 +1,14 @@
 #include "dining_philosophers.hpp"
-#include <thread>
 #include <chrono>
-#include <random>
 #include <iostream>
+#include <random>
+#include <thread>
 
 namespace concurrency {
 
 DiningPhilosophers::DiningPhilosophers(int num_philosophers)
-    : num_philosophers_(num_philosophers), forks_(num_philosophers) ,
-    eat_counts_(num_philosophers), states_(num_philosophers) {
+    : num_philosophers_(num_philosophers), forks_(num_philosophers),
+      eat_counts_(num_philosophers), states_(num_philosophers) {
     threads_.reserve(num_philosophers);
     running_.store(false);
     // TODO: Initialize forks and other data structures
@@ -24,31 +24,33 @@ void DiningPhilosophers::start_dining() {
     if (running_.exchange(true)) {
         return; // Already running
     }
-    
+
     // TODO: Initialize philosopher threads
     for (int i = 0; i < num_philosophers_; ++i) {
         // Create philosopher thread
-        threads_.emplace_back(&DiningPhilosophers::philosopher_routine, this, i);
+        threads_.emplace_back(&DiningPhilosophers::philosopher_routine, this,
+                              i);
     }
 }
 
 void DiningPhilosophers::stop_dining() {
     running_ = false;
-    if (is_deadlocked( )) {
+    if (is_deadlocked()) {
         throw;
     }
     // TODO: Join all philosopher threads
-     for (auto& thread : threads_) {
-         if (thread.joinable()) {
-             thread.join();
-         }
-     }
+    for (auto &thread : threads_) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
     threads_.clear();
 }
 
 std::vector<int> DiningPhilosophers::get_eat_counts() const {
     std::vector<int> res(eat_counts_.size());
-    std::transform(eat_counts_.begin(), eat_counts_.end(), res.begin(), [](std::atomic<int> const &i){ return i.load();});
+    std::transform(eat_counts_.begin(), eat_counts_.end(), res.begin(),
+                   [](std::atomic<int> const &i) { return i.load(); });
     return res;
 }
 
@@ -77,33 +79,32 @@ void DiningPhilosophers::philosopher_routine(int philosopher_id) {
     while (running_.load()) {
         // Think
         states_[philosopher_id].store(State::Think);
-        //std::this_thread::sleep_for(std::chrono::milliseconds(think_time(gen)));
-        
+        // std::this_thread::sleep_for(std::chrono::milliseconds(think_time(gen)));
+
         {
-                    states_[philosopher_id].store(State::WaitLeft);
+            states_[philosopher_id].store(State::WaitLeft);
 
             output(philosopher_id, "wait for left fork");
-            std::lock_guard<std::mutex> left_fork(forks_[minfork(philosopher_id, num_philosophers_)]);
-        states_[philosopher_id].store(State::WaitRight);
+            std::lock_guard<std::mutex> left_fork(
+                forks_[minfork(philosopher_id, num_philosophers_)]);
+            states_[philosopher_id].store(State::WaitRight);
 
-            output(philosopher_id,"wait for right fork");
-            std::lock_guard<std::mutex> right_fork(forks_[maxfork(philosopher_id, num_philosophers_)]);
-           states_[philosopher_id].store(State::Eat);
+            output(philosopher_id, "wait for right fork");
+            std::lock_guard<std::mutex> right_fork(
+                forks_[maxfork(philosopher_id, num_philosophers_)]);
+            states_[philosopher_id].store(State::Eat);
 
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(eat_time(gen)));
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(eat_time(gen)));
             eat_counts_[philosopher_id].fetch_add(1);
         }
         output(philosopher_id, "finished eating");
-            
     }
 }
-    void DiningPhilosophers::output(int id, std::string const & msg) {
-        return;
-                    // std::lock_guard<std::mutex> lock(output_mutex_);
-                    // std::cout << id << " : " << msg << std::endl;
-    }
- 
-
+void DiningPhilosophers::output(int id, std::string const &msg) {
+    return;
+    // std::lock_guard<std::mutex> lock(output_mutex_);
+    // std::cout << id << " : " << msg << std::endl;
+}
 
 } // namespace concurrency
