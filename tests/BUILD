@@ -31,6 +31,21 @@ cc_test(
     copts = ["-g", "-O0"],
 )
 
+# Producer-Consumer tests only
+cc_test(
+    name = "test_read_write_lock",
+    srcs = [
+        "test_main.cpp",
+        "test_read_write_lock.cpp",
+    ],
+    deps = [
+        "//:concurrency",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+    copts = ["-g", "-O0"],
+)
+
 # Resource Pool with Semaphores
 cc_test(
     name = "test_resource_pool",
