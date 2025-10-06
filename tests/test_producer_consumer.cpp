@@ -72,7 +72,7 @@ TEST_F(ProducerConsumerTest, BufferBounds) {
         // Check buffer size
         size_t current_size = pc.current_buffer_size();
         int current_max = max_buffer_size.load();
-        while (current_size > current_max && 
+        while ((long int)current_size > current_max && 
                !max_buffer_size.compare_exchange_weak(current_max, current_size)) {
             current_max = max_buffer_size.load();
         }

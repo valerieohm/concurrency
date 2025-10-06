@@ -44,7 +44,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "targets": ["//tests:test_main"],
+            "targets": ["//tests:all"],
             "problemMatcher" :"$gcc"
             
         },

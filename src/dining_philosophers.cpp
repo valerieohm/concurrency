@@ -35,9 +35,7 @@ void DiningPhilosophers::start_dining() {
 
 void DiningPhilosophers::stop_dining() {
     running_ = false;
-    if (is_deadlocked()) {
-        throw;
-    }
+
     // TODO: Join all philosopher threads
     for (auto &thread : threads_) {
         if (thread.joinable()) {
@@ -79,7 +77,7 @@ void DiningPhilosophers::philosopher_routine(int philosopher_id) {
     while (running_.load()) {
         // Think
         states_[philosopher_id].store(State::Think);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(think_time(gen)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(think_time(gen)));
 
         {
             states_[philosopher_id].store(State::WaitLeft);
