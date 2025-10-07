@@ -8,7 +8,7 @@
       "name": "Debug Bazel Boost Test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/bazel-bin/tests/test_producer_consumer",
+      "program": "${workspaceFolder}/bazel-bin/tests/test_read_write_lock",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
